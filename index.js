@@ -59,6 +59,19 @@ app.delete('/api/persons/:id', (req, res) => {
 app.post('/api/persons', (request, response) => {
   body = request.body;
 
+  if (!body.name || !body.number) {
+    return response.status(400).json({ 
+      error: 'name or number is missing' 
+    });
+  }
+
+  const existingPerson = notes.find(person => person.name === body.name);
+  if (existingPerson) {
+    return response.status(400).json({
+      error: 'name already exists in the phonebook'
+    });
+  }
+
   if (!body.content) {
     return response.status(400).json({ 
       error: 'content missing' 
@@ -66,9 +79,11 @@ app.post('/api/persons', (request, response) => {
   }
 
   const note = {
+    name: body.name,
+    number: body.number,
     content: body.content,
     important: Boolean(body.important) || false,
-    id: Math.random(1, 10000),
+    id: Math.floor(Math.random() * 10000),
   }
 
   notes = notes.concat(note)
