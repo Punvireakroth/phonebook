@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 
+app.use(express.json());
+
 let notes = [
   {
     "id": "1",
@@ -52,6 +54,25 @@ app.delete('/api/persons/:id', (req, res) => {
   notes = notes.filter(note => note.id !== id);
 
   res.status(204).end();
+})
+
+app.post('/api/persons', (request, response) => {
+  body = request.body;
+
+  if (!body.content) {
+    return response.status(400).json({ 
+      error: 'content missing' 
+    })
+  }
+
+  const note = {
+    content: body.content,
+    important: Boolean(body.important) || false,
+    id: Math.random(1, 10000),
+  }
+
+  notes = notes.concat(note)
+  response.json(notes);
 })
 
 const PORT = 3001;
