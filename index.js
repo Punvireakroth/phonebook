@@ -1,5 +1,14 @@
 const express = require('express');
+const morgan = require('morgan');
+
 const app = express();
+
+
+// Middlewares
+morgan.token('req-body', (req, res) => JSON.stringify(req.body));
+const customFormat = ':method :url :status :res[content-length] - :response-time ms :req-body';
+
+app.use(morgan(customFormat));
 
 app.use(express.json());
 

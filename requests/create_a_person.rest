@@ -2,7 +2,7 @@ POST http://localhost:3001/api/persons
 content-type: application/json
 
 {
-  "name": "Example note content",
+  "name": "New data bart",
   "content": "I like reading",
   "number": 1,
   "important": true
