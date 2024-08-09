@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 
@@ -11,6 +12,8 @@ const customFormat = ':method :url :status :res[content-length] - :response-time
 app.use(morgan(customFormat));
 
 app.use(express.json());
+
+app.use(cors());
 
 let notes = [
   {
@@ -99,7 +102,7 @@ app.post('/api/persons', (request, response) => {
   response.json(notes);
 })
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`SERVER RUNNING ON PORT ${PORT}`);
 })

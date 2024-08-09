@@ -1,0 +1,24 @@
+
+.success {
+  padding: 5px;
+  font-size: 15px;
+  color: green;
+  font-weight: simibold;
+  background-color: lightgray;
+  border-style: solid;
+  border-color: green;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.errorMessage {
+  padding: 5px;
+  font-size: 15px;
+  color: red;
+  font-weight: simibold;
+  background-color: lightgray;
+  border-style: solid;
+  border-color: red;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
