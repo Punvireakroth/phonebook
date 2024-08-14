@@ -1,6 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const PhoneBook = require('./models/phonebook');
 
 const app = express();
 
@@ -41,7 +43,13 @@ let notes = [
 ];
 
 app.get('/api/persons', (req, res) => {
-  res.json(notes);
+  PhoneBook.find({})
+    .then(result => {
+      if(result.length === 0) {
+        res.json({message: 'There is no information'})
+      }
+      res.json(result);
+    })
 })
 
 app.get('/info', (req, res) => {
