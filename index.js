@@ -19,64 +19,43 @@ app.use(cors());
 
 app.use(express.static('dist'))
 
-let notes = [
-  {
-    "id": "1",
-    "name": "Arto Hellas",
-    "number": "040-123456"
-  },
-  {
-    "id": "2",
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523"
-  },
-  {
-    "id": "3",
-    "name": "Dan Abramov",
-    "number": "12-43-234345"
-  },
-  {
-    "id": "4",
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122"
-  }
-];
+// let notes = [];
 
 app.get('/api/persons', (req, res) => {
-  PhoneBook.find({})
+  PhoneBook.find()
     .then(result => {
       if(result.length === 0) {
-        res.json({message: 'There is no information'})
+        return res.json({message: 'There is no information'})
       }
       res.json(result);
     })
 })
 
-app.get('/info', (req, res) => {
-  const numEntries = notes.length;
-  const currentDate = new Date();
+// app.get('/info', (req, res) => {
+//   const numEntries = notes.length;
+//   const currentDate = new Date();
 
-  const response = `<p>Phone book has info for ${numEntries} people</p> <br /> <p>${currentDate}</p>`;
+//   const response = `<p>Phone book has info for ${numEntries} people</p> <br /> <p>${currentDate}</p>`;
 
-  res.send(response);
-})
+//   res.send(response);
+// })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
-  const person = notes.find(note => note.id === id);
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
-})
+// app.get('/api/persons/:id', (req, res) => {
+//   const id = req.params.id;
+//   const person = notes.find(note => note.id === id);
+//   if (person) {
+//     res.json(person);
+//   } else {
+//     res.status(404).end();
+//   }
+// })
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
-  notes = notes.filter(note => note.id !== id);
+// app.delete('/api/persons/:id', (req, res) => {
+//   const id = req.params.id;
+//   notes = notes.filter(note => note.id !== id);
 
-  res.status(204).end();
-})
+//   res.status(204).end();
+// })
 
 app.post('/api/persons', (request, response) => {
   body = request.body;
@@ -85,14 +64,14 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({ 
       error: 'name or number is missing' 
     });
-  }
+  } 
 
-  const existingPerson = notes.find(person => person.name === body.name);
-  if (existingPerson) {
-    return response.status(400).json({
-      error: 'name already exists in the phonebook'
-    });
-  }
+
+  const phoneBook = new PhoneBook({
+    name: body.name,
+    number: body.number,
+    content: body.content
+  })
 
   if (!body.content) {
     return response.status(400).json({ 
@@ -100,16 +79,14 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const note = {
-    name: body.name,
-    number: body.number,
-    content: body.content,
-    important: Boolean(body.important) || false,
-    id: Math.floor(Math.random() * 10000),
-  }
 
-  notes = notes.concat(note)
-  response.json(notes);
+  phoneBook.save()
+    .then(savePhoneBook => {
+      response.json(savePhoneBook)
+    })
+    .catch(error => {
+      response.status(500).json({error: error.message});
+    })
 })
 
 const PORT = process.env.PORT || 3000;

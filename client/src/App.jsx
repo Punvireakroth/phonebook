@@ -24,7 +24,12 @@ const App = () => {
     personService
       .getAll()
       .then(response => {
-        setInfo(response.data);
+        console.log('Response data:', response.data);
+        const data = Array.isArray(response.data) ? response.data : [];
+        setInfo(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
       })
   }, []);
 
@@ -96,9 +101,8 @@ const App = () => {
     setNewContent(event.target.value);
   }
 
-  const filteredInfo = info.filter(person =>
-    person.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredInfo = info.filter(person => person.name.toLowerCase().includes(search.toLowerCase()))
+
 
 
   const handleSearch = (event) => {
