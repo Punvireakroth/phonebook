@@ -73,6 +73,25 @@ app.post('/api/persons', (request, response) => {
     })
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body;
+
+  const updatedPerson = {
+    number: body.number,
+    content: body.content,
+  }
+
+  PhoneBook.findByIdAndUpdate(request.params.id, updatedPerson, {new: true})
+    .then(updatedPerson => {
+      if(updatedPerson) {
+        response.json(updatedPerson);
+      } else {
+        response.status(404).json({ error: 'Person not found'});
+      }
+    })
+    .catch(error => next(error));
+})
+
 
 app.delete('/api/persons/:id', (request, response, next) => {
   PhoneBook.findByIdAndDelete(request.params.id)
