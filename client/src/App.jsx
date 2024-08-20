@@ -56,6 +56,15 @@ const App = () => {
             setNotification(null)
           }, 2000);
         })
+        .catch(error => {
+          console.error('In error handling');
+          setError(error);
+          const errorMessage = error.response?.data?.error || 'An error occurred';
+          setErrorNotification(`${errorMessage}`);
+          setTimeout(() => {
+            setErrorNotification(null);
+          }, 2000);
+        })
       setNewName('');
       setNewPhoneNumber('');
       setNewContent('');
@@ -77,12 +86,13 @@ const App = () => {
             }, 2000);
           })
           .catch(error => {
+            console.error('Error:', error);
             setError(error);
-            setErrorNotification(`Information of ${existedPerson.name} has already been removed from server`);
+            const errorMessage = error.response?.data?.error || 'An error occurred';
+            setErrorNotification(errorMessage);
             setTimeout(() => {
               setErrorNotification(null);
-            }, 2000);
-            console.error('Error updating person:', error);
+            }, 6000);
           });
       }
     }
