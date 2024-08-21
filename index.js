@@ -1,21 +1,21 @@
-require('dotenv').config();
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const PhoneBook = require('./models/phonebook');
+require('dotenv').config()
+const express = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
+const PhoneBook = require('./models/phonebook')
 
-const app = express();
+const app = express()
 
 
 // Middlewares
-morgan.token('req-body', (req, res) => JSON.stringify(req.body));
-const customFormat = ':method :url :status :res[content-length] - :response-time ms :req-body';
+morgan.token('req-body', (req) => JSON.stringify(req.body))
+const customFormat = ':method :url :status :res[content-length] - :response-time ms :req-body'
 
-app.use(morgan(customFormat));
+app.use(morgan(customFormat))
 
-app.use(express.json());
+app.use(express.json())
 
-app.use(cors());
+app.use(cors())
 
 app.use(express.static('dist'))
 
@@ -31,12 +31,10 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.post('/api/persons', (request, response, next) => {
-  body = request.body;
+  let body = request.body
 
   if (!body.name || !body.number) {
-    return response.status(400).json({ 
-      error: 'name or number is missing' 
-    });
+    return response.status(400).json({ error: 'name or number is missing' })
   } 
 
   const phoneBook = new PhoneBook({
@@ -46,7 +44,7 @@ app.post('/api/persons', (request, response, next) => {
   })
 
   if (!body.content) {
-    return response.status(400).json({ 
+    return response.status(400).json( { 
       error: 'content missing' 
     })
   }
@@ -59,7 +57,7 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const body = request.body;
+  const body = request.body
 
   const updatedPerson = {
     number: body.number,
@@ -83,30 +81,30 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .then(result => {
       response.status(204).end()
     })
-    .catch(error => next(error));
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({error: 'unknown endpoint'})
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
-app.use(unknownEndpoint);
+app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if(error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
 
-  next(error);
+  next(error)
 }
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-  console.log(`SERVER RUNNING ON PORT ${PORT}`);
+  console.log(`SERVER RUNNING ON PORT ${PORT}`)
 })
