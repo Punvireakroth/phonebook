@@ -19,7 +19,6 @@ app.use(cors());
 
 app.use(express.static('dist'))
 
-// let notes = [];
 
 app.get('/api/persons', (req, res) => {
   PhoneBook.find()
@@ -30,18 +29,6 @@ app.get('/api/persons', (req, res) => {
       res.json(result);
     })
 })
-
-
-// app.get('/api/persons/:id', (req, res) => {
-//   const id = req.params.id;
-//   const person = notes.find(note => note.id === id);
-//   if (person) {
-//     res.json(person);
-//   } else {
-//     res.status(404).end();
-//   }
-// })
-
 
 app.post('/api/persons', (request, response, next) => {
   body = request.body;

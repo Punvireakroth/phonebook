@@ -83,7 +83,7 @@ const App = () => {
             setChangedNotification(`${response.data.name}'s number has been changed!`)
             setTimeout(() => {
               setChangedNotification(null);
-            }, 2000);
+            }, 6000);
           })
           .catch(error => {
             console.error('Error:', error);
